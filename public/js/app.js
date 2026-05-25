@@ -180,7 +180,7 @@ async function loadDashboard(user, userData) {
     // Setăm UI-ul
     document.getElementById('dashboard-fridge-name').textContent = household.name;
     document.getElementById('dashboard-role-badge').textContent  =
-      role === 'lord_commander' ? '⚔️ Lord Commander' : '🌙 Night Snaker';
+      role === 'lord_commander' ? '⚔️ Lord Commander' : '🌙 Night Snacker';
 
     return true;
   } catch (err) {
@@ -450,7 +450,7 @@ document.getElementById('form-join-household').addEventListener('submit', async 
       .doc(householdDoc.id).collection('members').get();
 
     if (membersSnap.size >= 6) {
-      showError('join-household-error', 'Frigiderul este plin (maxim 6 Night Snakers).');
+      showError('join-household-error', 'Frigiderul este plin (maxim 6 Night Snackers).');
       resetBtnLoading('btn-join-household');
       return;
     }

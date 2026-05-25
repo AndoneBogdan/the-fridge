@@ -735,8 +735,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-around;
-  height: calc(60px + env(safe-area-inset-bottom, 0px));
-  padding-bottom: env(safe-area-inset-bottom, 0px);
+  height: calc(64px + env(safe-area-inset-bottom, 16px));
+  padding-bottom: calc(env(safe-area-inset-bottom, 16px) + 6px);
   background: var(--bg-2);
   border-top: 1px solid var(--border);
   flex-shrink: 0;

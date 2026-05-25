@@ -27,7 +27,7 @@ async function loadMembers() {
         <div class="invite-section">
           <div class="section-label">Cod invitație</div>
           <div class="invite-code-display">${household?.inviteCode || '——'}</div>
-          <p class="invite-hint">Trimite codul Night Snaker-ilor care vor să se alăture</p>
+          <p class="invite-hint">Trimite codul Night Snacker-ilor care vor să se alăture</p>
           <button class="btn btn-ghost btn-sm btn-copy-invite-js">📋 Copiază codul</button>
         </div>
       `;
@@ -40,7 +40,7 @@ async function loadMembers() {
     members.forEach(m => {
       const initial  = (m.name || '?')[0].toUpperCase();
       const isLC     = m.role === 'lord_commander';
-      const badge    = isLC ? '⚔️ Lord Commander' : '🌙 Night Snaker';
+      const badge    = isLC ? '⚔️ Lord Commander' : '🌙 Night Snacker';
       const badgeCls = isLC ? 'role-lc' : 'role-ns';
       const isMe     = m.id === appState.user?.uid;
 
