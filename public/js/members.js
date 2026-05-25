@@ -52,7 +52,10 @@ async function loadMembers() {
             <div class="member-name">${m.name || 'Anonim'}${isMe ? ' <span class="me-tag">tu</span>' : ''}</div>
             <div class="member-role ${badgeCls}">${badge}</div>
           </div>
-          ${canKick ? `<button class="btn-kick" data-uid="${m.id}" data-name="${m.name || 'Anonim'}" title="Elimină membru">✕</button>` : ''}
+          ${canKick ? `<button class="btn-kick" data-uid="${m.id}" data-name="${m.name || 'Anonim'}">
+            ✕
+            <span class="btn-kick-label">Scoate mâncăciosul</span>
+          </button>` : ''}
         </div>
       `;
     });
