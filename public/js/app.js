@@ -340,7 +340,7 @@ document.getElementById('form-create-household').addEventListener('submit', asyn
   try {
     // ── Verificare cap beta (30 frigidere) ──
     const allHouseholds = await db.collection('households').get();
-    if (allHouseholds.size >= 2) {
+    if (allHouseholds.size >= 30) {
       resetBtnLoading('btn-create-household');
       document.getElementById('modal-beta').classList.remove('hidden');
       return;
