@@ -1,0 +1,23 @@
+[build]
+  publish = "public"
+
+[[headers]]
+  for = "/service-worker.js"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/firebase-messaging-sw.js"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
