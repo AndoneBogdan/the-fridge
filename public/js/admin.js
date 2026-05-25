@@ -41,10 +41,14 @@ async function loadAdminPanel() {
 
     list.sort((a, b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0));
 
+    const waitlistSnap = await db.collection('waitlist').get();
+    const waitlistFree = waitlistSnap.docs.filter(d => d.data().type === 'free').length;
+    const waitlistVip  = waitlistSnap.docs.filter(d => d.data().type === 'vip').length;
+
     let html = `
       <div class="admin-stats">
         <div class="admin-stat-card">
-          <div class="admin-stat-value">${householdsSnap.size}</div>
+          <div class="admin-stat-value">${householdsSnap.size}<span class="admin-stat-cap">/30</span></div>
           <div class="admin-stat-label">Frigidere</div>
         </div>
         <div class="admin-stat-card">
@@ -56,6 +60,27 @@ async function loadAdminPanel() {
           <div class="admin-stat-label">Produse</div>
         </div>
       </div>
+
+      <div class="admin-waitlist-row">
+        <div class="admin-stat-card">
+          <div class="admin-stat-value">${waitlistSnap.size}</div>
+          <div class="admin-stat-label">Pe listă așteptare</div>
+        </div>
+        <div class="admin-stat-card">
+          <div class="admin-stat-value">${waitlistFree}</div>
+          <div class="admin-stat-label">Gratuit</div>
+        </div>
+        <div class="admin-stat-card admin-stat-card--vip">
+          <div class="admin-stat-value">${waitlistVip}</div>
+          <div class="admin-stat-label">⭐ Fondatori</div>
+        </div>
+      </div>
+
+      <a class="admin-analytics-btn" href="https://analytics.google.com" target="_blank">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        Deschide Google Analytics
+      </a>
+
       <div class="section-label" style="padding:16px 0 8px">Toate frigiderele</div>
     `;
 
