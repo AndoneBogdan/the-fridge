@@ -43,6 +43,7 @@ async function loadMembers() {
       const badge    = isLC ? '⚔️ Lord Commander' : '🌙 Night Snacker';
       const badgeCls = isLC ? 'role-lc' : 'role-ns';
       const isMe     = m.id === appState.user?.uid;
+      const canKick  = role === 'lord_commander' && !isLC;
 
       html += `
         <div class="member-card ${isMe ? 'member-card--me' : ''}">
@@ -51,6 +52,7 @@ async function loadMembers() {
             <div class="member-name">${m.name || 'Anonim'}${isMe ? ' <span class="me-tag">tu</span>' : ''}</div>
             <div class="member-role ${badgeCls}">${badge}</div>
           </div>
+          ${canKick ? `<button class="btn-kick" data-uid="${m.id}" data-name="${m.name || 'Anonim'}" title="Elimină membru">✕</button>` : ''}
         </div>
       `;
     });
@@ -68,6 +70,25 @@ async function loadMembers() {
       } catch {
         showToast(`Cod: ${code} — copiază manual`, 'info', 5000);
       }
+    });
+
+    // Butoane eliminare membri (doar Lord Commander)
+    body.querySelectorAll('.btn-kick').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const uid  = btn.dataset.uid;
+        const name = btn.dataset.name;
+        if (!confirm(`Elimini pe "${name}" din frigider?`)) return;
+        try {
+          await db.collection('households').doc(householdId)
+            .collection('members').doc(uid).delete();
+          await db.collection('users').doc(uid).update({ householdId: null });
+          showToast(`${name} a fost eliminat. ✓`, 'success');
+          loadMembers();
+        } catch (e) {
+          console.error('Kick error:', e);
+          showToast('Eroare la eliminare.', 'error');
+        }
+      });
     });
 
   } catch (err) {

@@ -1204,6 +1204,25 @@ body {
 
 .member-card--me { border-color: var(--accent); }
 
+.btn-kick {
+  margin-left: auto;
+  background: none;
+  border: 1px solid var(--danger-text);
+  color: var(--danger-text);
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.7;
+  transition: var(--ease);
+}
+.btn-kick:hover { opacity: 1; background: var(--danger-bg); }
+
 .member-avatar {
   width: 44px;
   height: 44px;
