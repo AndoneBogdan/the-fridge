@@ -8,6 +8,7 @@ function buildGuideUI() {
 
     <div class="guide-intro">
       <p>Timpii indicați sunt orientativi. Verificați întotdeauna aspectul, mirosul și textura alimentelor.</p>
+      <p style="margin-top:8px">💡 Când adaugi un produs nou, aplicația îți sugerează automat o dată de expirare bazată pe acest ghid — o găsești sub câmpul <em>Data expirării</em>. O poți folosi ca punct de plecare sau înlocui cu data de pe etichetă.</p>
     </div>
 
     <div class="guide-section">

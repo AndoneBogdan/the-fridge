@@ -497,6 +497,7 @@ body {
   font-weight: 600;
   color: var(--text);
   letter-spacing: 0.03em;
+  cursor: pointer;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1716,6 +1717,64 @@ body {
   left: 0;
   font-size: 0.65rem;
   top: 5px;
+}
+
+/* ════════════════════════════════════════════
+   CATEGORY CARD GRID (dashboard grouped view)
+════════════════════════════════════════════ */
+.category-card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  padding: 8px 0 16px;
+  width: 100%;
+}
+
+.cat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 16px 8px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  text-align: center;
+  transition: background 0.15s;
+}
+
+.cat-card:active { background: var(--bg-elevated); }
+
+.cat-card-icon { font-size: 2rem; line-height: 1; }
+
+.cat-card-name {
+  font-size: 0.78rem;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.cat-card-count {
+  font-size: 0.72rem;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 10px;
+  padding: 1px 8px;
+  font-weight: 600;
+}
+
+.cat-back-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 10px 16px;
+  color: var(--accent);
+  font-size: 0.875rem;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  margin-bottom: 8px;
+  display: block;
 }
 
 /* ════════════════════════════════════════════

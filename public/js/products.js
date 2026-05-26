@@ -58,6 +58,13 @@ let searchQuery         = '';
 let productsCache       = [];
 let productsUnsubscribe = null;
 
+function resetToAll() {
+  currentFilter = 'all';
+  document.querySelectorAll('.filter-tab').forEach(t =>
+    t.classList.toggle('active', t.dataset.filter === 'all'));
+  renderProducts('all');
+}
+
 // ════════════════════════════════════════════
 // CATEGORY GRID
 // ════════════════════════════════════════════
@@ -401,7 +408,7 @@ function renderProducts(filter = 'all') {
   const list       = document.getElementById('products-list');
   const emptyState = document.getElementById('empty-state');
 
-  list.querySelectorAll('.product-card').forEach(c => c.remove());
+  list.querySelectorAll('.product-card, .category-card-grid, .cat-back-btn').forEach(c => c.remove());
 
   let products = [...productsCache];
   const today  = new Date().toISOString().split('T')[0];
@@ -445,8 +452,63 @@ function renderProducts(filter = 'all') {
   }
 
   emptyState.style.display = 'none';
+
+  if (filter === 'all' && !searchQuery && products.length > 15) {
+    renderCategoryGrid(products);
+    return;
+  }
+
   const fragment = document.createDocumentFragment();
   products.forEach(p => fragment.appendChild(createProductCard(p)));
+  list.appendChild(fragment);
+}
+
+function renderCategoryGrid(products) {
+  const list = document.getElementById('products-list');
+  const groups = {};
+  products.forEach(p => {
+    const cat = p.category || 'Altele';
+    if (!groups[cat]) groups[cat] = [];
+    groups[cat].push(p);
+  });
+
+  const catOrder = CATEGORIES.map(c => c.name);
+  const sorted = Object.entries(groups).sort((a, b) =>
+    (catOrder.indexOf(a[0]) + 1 || 99) - (catOrder.indexOf(b[0]) + 1 || 99));
+
+  const grid = document.createElement('div');
+  grid.className = 'category-card-grid';
+
+  sorted.forEach(([cat, items]) => {
+    const catIcon = CATEGORIES.find(c => c.name === cat)?.icon || '📦';
+    const card = document.createElement('button');
+    card.type = 'button';
+    card.className = 'cat-card';
+    card.innerHTML = `
+      <span class="cat-card-icon">${catIcon}</span>
+      <span class="cat-card-name">${cat}</span>
+      <span class="cat-card-count">${items.length}</span>
+    `;
+    card.addEventListener('click', () => showCategoryProducts(cat, items));
+    grid.appendChild(card);
+  });
+
+  list.appendChild(grid);
+}
+
+function showCategoryProducts(catName, items) {
+  const list = document.getElementById('products-list');
+  list.querySelectorAll('.product-card, .category-card-grid, .cat-back-btn').forEach(c => c.remove());
+
+  const backBtn = document.createElement('button');
+  backBtn.className = 'cat-back-btn';
+  backBtn.textContent = '← Toate categoriile';
+  backBtn.addEventListener('click', () => renderProducts('all'));
+  list.insertBefore(backBtn, list.querySelector('.empty-state')?.nextSibling || null);
+  list.appendChild(backBtn);
+
+  const fragment = document.createDocumentFragment();
+  items.forEach(p => fragment.appendChild(createProductCard(p)));
   list.appendChild(fragment);
 }
 
@@ -648,7 +710,8 @@ function exportExcel() {
 
 document.getElementById('btn-export-csv').addEventListener('click', exportExcel);
 
-document.getElementById('nav-home').addEventListener('click', showDashboard);
+document.getElementById('nav-home').addEventListener('click', () => { resetToAll(); showDashboard(); });
+document.getElementById('dashboard-fridge-name').addEventListener('click', () => { resetToAll(); showDashboard(); });
 document.getElementById('nav-add').addEventListener('click', openAddProduct);
 document.getElementById('btn-top-add').addEventListener('click', openAddProduct);
 document.getElementById('btn-cancel-product').addEventListener('click', () => showScreen('screen-dashboard'));
@@ -680,7 +743,8 @@ _dashScreen.addEventListener('touchstart', (e) => {
 _dashScreen.addEventListener('touchend', (e) => {
   if (!_ptStartY) return;
   if (e.changedTouches[0].clientY - _ptStartY > 70) {
-    loadProducts();
+    resetToAll();
+    showDashboard();
     showToast('Actualizat ✓', 'success', 1500);
   }
   _ptStartY = 0;
