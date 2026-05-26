@@ -7,6 +7,20 @@ function notifEnabled() {
   return localStorage.getItem('notif_disabled') !== 'true';
 }
 
+async function showNotif(title, options) {
+  try {
+    if ('serviceWorker' in navigator) {
+      const reg = await navigator.serviceWorker.ready;
+      await reg.showNotification(title, options);
+    } else {
+      new Notification(title, options);
+    }
+  } catch (err) {
+    console.error('showNotif error:', err);
+    try { new Notification(title, options); } catch (_) {}
+  }
+}
+
 // Apelat la fiecare showDashboard()
 async function initNotifications() {
   if (Notification.permission === 'granted' && notifEnabled()) {
@@ -73,7 +87,7 @@ async function checkExpiryOnOpen() {
     if (soon.length)  parts.push(`Curând: ${soon.map(p => `${p.name} (${p.daysLeft}z)`).join(', ')}`);
 
     const todayStr = new Date().toISOString().slice(0, 10);
-    new Notification('🧊 The Fridge — Atenție!', {
+    await showNotif('🧊 The Fridge — Atenție!', {
       body: parts.join('. '),
       icon: '/icons/icon-192.png',
       tag:  `fridge-expiry-${todayStr}`

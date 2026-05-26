@@ -213,8 +213,8 @@ function wireSettingsEvents() {
     });
   }
 
-  document.getElementById('btn-test-notifs')?.addEventListener('click', () => {
-    new Notification('🧊 The Fridge — Test', {
+  document.getElementById('btn-test-notifs')?.addEventListener('click', async () => {
+    await showNotif('🧊 The Fridge — Test', {
       body: 'Notificările funcționează corect! ✓',
       icon: '/icons/icon-192.png'
     });
