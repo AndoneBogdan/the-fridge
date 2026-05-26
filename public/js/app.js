@@ -166,13 +166,24 @@ async function loadDashboard(user, userData) {
     ]);
 
     if (!householdDoc.exists) {
-      // Frigiderul a fost șters — curățăm referința
       await db.collection('users').doc(user.uid).update({ householdId: null });
       return false;
     }
 
     const household = householdDoc.data();
-    const role      = memberDoc.exists ? memberDoc.data().role : 'night_snaker';
+
+    // Auto-repair: dacă documentul de membru lipsește, îl recreăm
+    if (!memberDoc.exists) {
+      await db.collection('households').doc(householdId)
+        .collection('members').doc(user.uid).set({
+          name:        userData.name,
+          role:        'night_snacker',
+          joinedAt:    firebase.firestore.FieldValue.serverTimestamp(),
+          avatarColor: userData.avatarColor
+        });
+    }
+
+    const role = memberDoc.exists ? memberDoc.data().role : 'night_snacker';
 
     // Actualizăm state-ul global
     appState = { user, userData, householdId, household, role };
@@ -467,7 +478,7 @@ document.getElementById('form-join-household').addEventListener('submit', async 
       await db.collection('households').doc(householdDoc.id)
         .collection('members').doc(user.uid).set({
           name:        userData.name,
-          role:        'night_snaker',
+          role:        'night_snacker',
           joinedAt:    firebase.firestore.FieldValue.serverTimestamp(),
           avatarColor: userData.avatarColor
         });
