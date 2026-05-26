@@ -84,14 +84,9 @@ async function checkExpiryOnOpen() {
 }
 
 function _refreshNotifButton() {
-  const granted     = typeof Notification !== 'undefined' && Notification.permission === 'granted';
-  const btnEnable   = document.getElementById('btn-enable-notifs');
-  const toggleWrap  = document.getElementById('notif-toggle-wrap');
-  const chk         = document.getElementById('chk-notifs');
-  const btnTest     = document.getElementById('btn-test-notifs');
-
-  if (btnEnable)  btnEnable.classList.toggle('hidden', granted);
-  if (toggleWrap) toggleWrap.classList.toggle('hidden', !granted);
-  if (chk)        chk.checked = notifEnabled();
-  if (btnTest)    btnTest.classList.toggle('hidden', !granted || !notifEnabled());
+  const granted = typeof Notification !== 'undefined' && Notification.permission === 'granted';
+  const chk     = document.getElementById('chk-notifs');
+  const btnTest = document.getElementById('btn-test-notifs');
+  if (chk)     chk.checked = granted && notifEnabled();
+  if (btnTest) btnTest.classList.toggle('hidden', !granted || !notifEnabled());
 }

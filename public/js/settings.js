@@ -75,8 +75,7 @@ function buildSettingsUI() {
         <span class="settings-item-icon">🔔</span>
         <span class="settings-item-label">Alerte produse care expiră</span>
         <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
-          <button class="btn btn-ghost btn-xs" id="btn-enable-notifs">Activează</button>
-          <label class="notif-toggle hidden" id="notif-toggle-wrap">
+          <label class="notif-toggle" id="notif-toggle-wrap">
             <input type="checkbox" id="chk-notifs">
             <span class="notif-toggle-slider"></span>
           </label>
@@ -180,19 +179,21 @@ function wireSettingsEvents() {
     showScreen('screen-admin');
   });
 
-  // ── Notificări
-  document.getElementById('btn-enable-notifs')?.addEventListener('click', () => {
-    requestNotificationPermission();
-  });
-
+  // ── Notificări toggle
   const chkNotifs = document.getElementById('chk-notifs');
   if (chkNotifs) {
-    chkNotifs.checked = notifEnabled();
-    chkNotifs.addEventListener('change', () => {
-      localStorage.setItem('notif_disabled', chkNotifs.checked ? 'false' : 'true');
-      showToast(chkNotifs.checked ? 'Alerte activate ✓' : 'Alerte dezactivate', 'info');
-      const btnTest = document.getElementById('btn-test-notifs');
-      if (btnTest) btnTest.classList.toggle('hidden', !chkNotifs.checked);
+    const granted = typeof Notification !== 'undefined' && Notification.permission === 'granted';
+    chkNotifs.checked = granted && notifEnabled();
+    chkNotifs.addEventListener('change', async () => {
+      if (chkNotifs.checked) {
+        const ok = await requestNotificationPermission();
+        if (!ok) { chkNotifs.checked = false; return; }
+        localStorage.setItem('notif_disabled', 'false');
+      } else {
+        localStorage.setItem('notif_disabled', 'true');
+        showToast('Alerte dezactivate', 'info');
+      }
+      _refreshNotifButton();
     });
   }
 
