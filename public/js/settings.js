@@ -75,13 +75,11 @@ function buildSettingsUI() {
         <span class="settings-item-icon">🔔</span>
         <span class="settings-item-label">Alerte produse care expiră</span>
         <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
-          ${(typeof Notification !== 'undefined' && Notification.permission === 'granted')
-            ? `<label class="notif-toggle">
-                 <input type="checkbox" id="chk-notifs">
-                 <span class="notif-toggle-slider"></span>
-               </label>`
-            : `<button class="btn btn-ghost btn-xs" id="btn-enable-notifs">Activează</button>`
-          }
+          <button class="btn btn-ghost btn-xs" id="btn-enable-notifs">Activează</button>
+          <label class="notif-toggle hidden" id="notif-toggle-wrap">
+            <input type="checkbox" id="chk-notifs">
+            <span class="notif-toggle-slider"></span>
+          </label>
           <button class="btn btn-ghost btn-xs hidden" id="btn-test-notifs" style="font-size:0.7rem">🔔 Test</button>
         </div>
       </div>
