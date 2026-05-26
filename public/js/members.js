@@ -40,7 +40,7 @@ async function loadMembers() {
     members.forEach(m => {
       const initial  = (m.name || '?')[0].toUpperCase();
       const isLC     = m.role === 'lord_commander';
-      const badge    = isLC ? '⚔️ Lord Commander' : '🌙 Night Snacker';
+      const badge    = isLC ? '🍴 Lord Commander' : '🍪 Night Snacker';
       const badgeCls = isLC ? 'role-lc' : 'role-ns';
       const isMe     = m.id === appState.user?.uid;
       const canKick  = role === 'lord_commander' && !isLC;

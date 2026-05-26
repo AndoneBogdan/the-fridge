@@ -579,6 +579,7 @@
       <button class="filter-tab" data-filter="freezer" role="tab">Congelator</button>
       <button class="filter-tab" data-filter="mine" role="tab">Ale mele</button>
       <button class="filter-tab" data-filter="expiring" role="tab">Expiră curând</button>
+      <button class="filter-tab" data-filter="expired" role="tab">Expirate</button>
     </div>
 
     <!-- SEARCH -->
@@ -626,6 +627,21 @@
   </div>
 
   <!-- ═══════════════════════════════════════
+       SCREEN: GHID ALIMENTE
+  ═══════════════════════════════════════════ -->
+  <div id="screen-guide" class="screen screen-guide">
+    <header class="page-header">
+      <button class="btn-back" id="btn-back-from-guide">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        Înapoi
+      </button>
+      <h2 class="page-title">Ghid alimente</h2>
+      <div></div>
+    </header>
+    <div class="guide-scroll" id="guide-body"></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
        TOAST GLOBAL
   ═══════════════════════════════════════════ -->
   <div id="toast" class="toast hidden" role="alert" aria-live="polite"></div>
@@ -649,5 +665,6 @@
   <script src="/js/settings.js"></script>
   <script src="/js/notifications.js"></script>
   <script src="/js/admin.js"></script>
+  <script src="/js/guide.js"></script>
 </body>
 </html>

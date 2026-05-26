@@ -68,6 +68,16 @@ function buildSettingsUI() {
     </div>
     ` : ''}
 
+    <!-- ── GHID ALIMENTE ── -->
+    <div class="settings-section">
+      <div class="settings-section-title">Informații</div>
+      <div class="settings-item settings-item--action" id="btn-open-guide">
+        <span class="settings-item-icon">📖</span>
+        <span class="settings-item-label">Ghid alimente</span>
+        <svg class="settings-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+
     <!-- ── NOTIFICĂRI ── -->
     <div class="settings-section">
       <div class="settings-section-title">Notificări</div>
@@ -171,6 +181,12 @@ function wireSettingsEvents() {
     } finally {
       btn.disabled = false; btn.textContent = 'Salvează';
     }
+  });
+
+  // ── Ghid alimente
+  document.getElementById('btn-open-guide')?.addEventListener('click', () => {
+    buildGuideUI();
+    showScreen('screen-guide');
   });
 
   // ── Admin panel

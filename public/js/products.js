@@ -423,6 +423,13 @@ function renderProducts(filter = 'all') {
       });
       break;
     }
+    case 'expired': {
+      products = products.filter(p => {
+        const exp = p.calculatedExpiry || p.expiryDate;
+        return exp && exp < today;
+      });
+      break;
+    }
   }
 
   if (searchQuery) {
@@ -641,6 +648,7 @@ function exportExcel() {
 
 document.getElementById('btn-export-csv').addEventListener('click', exportExcel);
 
+document.getElementById('nav-home').addEventListener('click', showDashboard);
 document.getElementById('nav-add').addEventListener('click', openAddProduct);
 document.getElementById('btn-top-add').addEventListener('click', openAddProduct);
 document.getElementById('btn-cancel-product').addEventListener('click', () => showScreen('screen-dashboard'));
@@ -661,3 +669,19 @@ document.getElementById('search-input').addEventListener('input', (e) => {
   searchQuery = e.target.value.trim().toLowerCase();
   renderProducts(currentFilter);
 });
+
+// Pull-to-refresh
+let _ptStartY = 0;
+const _dashScreen = document.getElementById('screen-dashboard');
+_dashScreen.addEventListener('touchstart', (e) => {
+  const list = document.getElementById('products-list');
+  _ptStartY = list.scrollTop === 0 ? e.touches[0].clientY : 0;
+}, { passive: true });
+_dashScreen.addEventListener('touchend', (e) => {
+  if (!_ptStartY) return;
+  if (e.changedTouches[0].clientY - _ptStartY > 70) {
+    loadProducts();
+    showToast('Actualizat ✓', 'success', 1500);
+  }
+  _ptStartY = 0;
+}, { passive: true });

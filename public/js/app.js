@@ -191,7 +191,7 @@ async function loadDashboard(user, userData) {
     // Setăm UI-ul
     document.getElementById('dashboard-fridge-name').textContent = household.name;
     document.getElementById('dashboard-role-badge').textContent  =
-      role === 'lord_commander' ? '⚔️ Lord Commander' : '🌙 Night Snacker';
+      role === 'lord_commander' ? '🍴 Lord Commander' : '🍪 Night Snacker';
 
     return true;
   } catch (err) {
