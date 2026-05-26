@@ -74,13 +74,15 @@ function buildSettingsUI() {
       <div class="settings-item settings-item--static">
         <span class="settings-item-icon">🔔</span>
         <span class="settings-item-label">Alerte produse care expiră</span>
-        <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end">
-          <button class="btn btn-ghost btn-xs" id="btn-enable-notifs"
-            ${(typeof Notification !== 'undefined' && Notification.permission === 'granted') ? 'disabled' : ''}>
-            ${(typeof Notification !== 'undefined' && Notification.permission === 'granted') ? 'Active ✓' : 'Activează'}
-          </button>
-          <button class="btn btn-ghost btn-xs hidden" id="btn-toggle-notifs"></button>
-          <button class="btn btn-ghost btn-xs hidden" id="btn-test-notifs">🔔 Test</button>
+        <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+          ${(typeof Notification !== 'undefined' && Notification.permission === 'granted')
+            ? `<label class="notif-toggle">
+                 <input type="checkbox" id="chk-notifs">
+                 <span class="notif-toggle-slider"></span>
+               </label>`
+            : `<button class="btn btn-ghost btn-xs" id="btn-enable-notifs">Activează</button>`
+          }
+          <button class="btn btn-ghost btn-xs hidden" id="btn-test-notifs" style="font-size:0.7rem">🔔 Test</button>
         </div>
       </div>
     </div>
@@ -185,12 +187,16 @@ function wireSettingsEvents() {
     requestNotificationPermission();
   });
 
-  document.getElementById('btn-toggle-notifs')?.addEventListener('click', () => {
-    const disabled = localStorage.getItem('notif_disabled') === 'true';
-    localStorage.setItem('notif_disabled', disabled ? 'false' : 'true');
-    _refreshNotifButton();
-    showToast(disabled ? 'Alerte reactivate ✓' : 'Alerte dezactivate', 'info');
-  });
+  const chkNotifs = document.getElementById('chk-notifs');
+  if (chkNotifs) {
+    chkNotifs.checked = notifEnabled();
+    chkNotifs.addEventListener('change', () => {
+      localStorage.setItem('notif_disabled', chkNotifs.checked ? 'false' : 'true');
+      showToast(chkNotifs.checked ? 'Alerte activate ✓' : 'Alerte dezactivate', 'info');
+      const btnTest = document.getElementById('btn-test-notifs');
+      if (btnTest) btnTest.classList.toggle('hidden', !chkNotifs.checked);
+    });
+  }
 
   document.getElementById('btn-test-notifs')?.addEventListener('click', () => {
     new Notification('🧊 The Fridge — Test', {

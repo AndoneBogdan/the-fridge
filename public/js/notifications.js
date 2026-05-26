@@ -84,16 +84,9 @@ async function checkExpiryOnOpen() {
 }
 
 function _refreshNotifButton() {
-  const btn        = document.getElementById('btn-enable-notifs');
-  const btnToggle  = document.getElementById('btn-toggle-notifs');
-  const btnTest    = document.getElementById('btn-test-notifs');
-  if (!btn) return;
+  const chk     = document.getElementById('chk-notifs');
+  const btnTest = document.getElementById('btn-test-notifs');
   const granted = typeof Notification !== 'undefined' && Notification.permission === 'granted';
-  btn.textContent = granted ? 'Active ✓' : 'Activează';
-  btn.disabled    = granted;
-  if (btnToggle) {
-    btnToggle.classList.remove('hidden');
-    btnToggle.textContent = notifEnabled() ? 'Dezactivează' : 'Activează din nou';
-  }
-  if (btnTest) btnTest.classList.toggle('hidden', !granted);
+  if (chk) chk.checked = notifEnabled();
+  if (btnTest) btnTest.classList.toggle('hidden', !granted || !notifEnabled());
 }
