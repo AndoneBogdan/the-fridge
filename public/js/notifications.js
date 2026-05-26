@@ -72,11 +72,11 @@ async function checkExpiryOnOpen() {
     if (today.length) parts.push(`Expiră AZI: ${today.map(p => p.name).join(', ')}`);
     if (soon.length)  parts.push(`Curând: ${soon.map(p => `${p.name} (${p.daysLeft}z)`).join(', ')}`);
 
-    const today = new Date().toISOString().slice(0, 10);
+    const todayStr = new Date().toISOString().slice(0, 10);
     new Notification('🧊 The Fridge — Atenție!', {
       body: parts.join('. '),
       icon: '/icons/icon-192.png',
-      tag:  `fridge-expiry-${today}`
+      tag:  `fridge-expiry-${todayStr}`
     });
   } catch (err) {
     console.error('Expiry check error:', err);
