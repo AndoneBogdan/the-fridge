@@ -3,9 +3,13 @@
 // Verifică produsele la deschiderea aplicației
 // ════════════════════════════════════════════
 
+function notifEnabled() {
+  return localStorage.getItem('notif_disabled') !== 'true';
+}
+
 // Apelat la fiecare showDashboard()
 async function initNotifications() {
-  if (Notification.permission === 'granted') {
+  if (Notification.permission === 'granted' && notifEnabled()) {
     await checkExpiryOnOpen();
   }
 }
@@ -68,10 +72,11 @@ async function checkExpiryOnOpen() {
     if (today.length) parts.push(`Expiră AZI: ${today.map(p => p.name).join(', ')}`);
     if (soon.length)  parts.push(`Curând: ${soon.map(p => `${p.name} (${p.daysLeft}z)`).join(', ')}`);
 
+    const today = new Date().toISOString().slice(0, 10);
     new Notification('🧊 The Fridge — Atenție!', {
       body: parts.join('. '),
       icon: '/icons/icon-192.png',
-      tag:  'fridge-expiry'
+      tag:  `fridge-expiry-${today}`
     });
   } catch (err) {
     console.error('Expiry check error:', err);
@@ -79,9 +84,16 @@ async function checkExpiryOnOpen() {
 }
 
 function _refreshNotifButton() {
-  const btn = document.getElementById('btn-enable-notifs');
+  const btn        = document.getElementById('btn-enable-notifs');
+  const btnToggle  = document.getElementById('btn-toggle-notifs');
+  const btnTest    = document.getElementById('btn-test-notifs');
   if (!btn) return;
-  const active = typeof Notification !== 'undefined' && Notification.permission === 'granted';
-  btn.textContent = active ? 'Active ✓' : 'Activează';
-  btn.disabled    = active;
+  const granted = typeof Notification !== 'undefined' && Notification.permission === 'granted';
+  btn.textContent = granted ? 'Active ✓' : 'Activează';
+  btn.disabled    = granted;
+  if (btnToggle) {
+    btnToggle.classList.remove('hidden');
+    btnToggle.textContent = notifEnabled() ? 'Dezactivează' : 'Activează din nou';
+  }
+  if (btnTest) btnTest.classList.toggle('hidden', !granted);
 }

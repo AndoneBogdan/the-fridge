@@ -74,10 +74,14 @@ function buildSettingsUI() {
       <div class="settings-item settings-item--static">
         <span class="settings-item-icon">🔔</span>
         <span class="settings-item-label">Alerte produse care expiră</span>
-        <button class="btn btn-ghost btn-xs" id="btn-enable-notifs"
-          ${(typeof Notification !== 'undefined' && Notification.permission === 'granted') ? 'disabled' : ''}>
-          ${(typeof Notification !== 'undefined' && Notification.permission === 'granted') ? 'Active ✓' : 'Activează'}
-        </button>
+        <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end">
+          <button class="btn btn-ghost btn-xs" id="btn-enable-notifs"
+            ${(typeof Notification !== 'undefined' && Notification.permission === 'granted') ? 'disabled' : ''}>
+            ${(typeof Notification !== 'undefined' && Notification.permission === 'granted') ? 'Active ✓' : 'Activează'}
+          </button>
+          <button class="btn btn-ghost btn-xs hidden" id="btn-toggle-notifs"></button>
+          <button class="btn btn-ghost btn-xs hidden" id="btn-test-notifs">🔔 Test</button>
+        </div>
       </div>
     </div>
 
@@ -181,6 +185,21 @@ function wireSettingsEvents() {
     requestNotificationPermission();
   });
 
+  document.getElementById('btn-toggle-notifs')?.addEventListener('click', () => {
+    const disabled = localStorage.getItem('notif_disabled') === 'true';
+    localStorage.setItem('notif_disabled', disabled ? 'false' : 'true');
+    _refreshNotifButton();
+    showToast(disabled ? 'Alerte reactivate ✓' : 'Alerte dezactivate', 'info');
+  });
+
+  document.getElementById('btn-test-notifs')?.addEventListener('click', () => {
+    new Notification('🧊 The Fridge — Test', {
+      body: 'Notificările funcționează corect! ✓',
+      icon: '/icons/icon-192.png'
+    });
+    showToast('Notificare de test trimisă', 'info');
+  });
+
   // ── Copiere cod invitație
   document.getElementById('btn-settings-copy-invite')?.addEventListener('click', async () => {
     try {
@@ -261,6 +280,7 @@ function toggleSettingsForm(formId, itemId, forceClose) {
 document.getElementById('nav-settings').addEventListener('click', () => {
   buildSettingsUI();
   showScreen('screen-settings');
+  _refreshNotifButton();
 });
 
 document.getElementById('btn-back-from-settings').addEventListener('click', () => {
